@@ -1,5 +1,25 @@
 # See https://www.dartlang.org/guides/libraries/private-files
 
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+*/.flutter-plugins-dependencies
+*/.flutter-plugins
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+./local.properties
+./pubspec.lock
+
 # Files and directories created by pub
 .dart_tool/
 .packages
@@ -19,3 +39,16 @@ doc/api/
 *.js_
 *.js.deps
 *.js.map
+
+# v1.2.3 原有配置
+example/
+.vscode/
+.gradle/
+gradle/
+./build.gradle
+./gradlew
+./gradlew.bat
+./README.md
+./README.en.md
+
+*.flutter-plugins-dependencies
