@@ -2,7 +2,9 @@ import 'package:aoli/route/navigator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'pages/splash.dart';
 import 'route/routes.dart';
@@ -41,11 +43,29 @@ class _AoliAppState extends State<AoliApp> {
             // This is called with `child` as the Navigator. We can simply ignore
             // this parameter and give our own Navigator (inside AppNavigator) with the
             // same key to override the default one.
+            localeListResolutionCallback:
+                (List<Locale> locales, Iterable<Locale> supportedLocales) {
+              return Locale('zh');
+            },
+            localeResolutionCallback:
+                (Locale locale, Iterable<Locale> supportedLocales) {
+              return Locale('zh');
+            },
+            localizationsDelegates: [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              const Locale('zh', 'CH'),
+              const Locale('en', 'US'),
+            ],
             builder: (BuildContext context, _ /*Widget child*/) =>
                 UtilNavigator(
                   navigatorKey: _navigatorKey,
                   initialPage: Splash(),
                   registerRoutes: routeConfig,
+                  transitionType: PageTransitionType.rightToLeftWithFade,
                 )));
   }
 }

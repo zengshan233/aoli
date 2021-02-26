@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 import 'route_page.dart';
 import 'util_route.dart';
@@ -10,12 +11,14 @@ class UtilNavigator extends StatefulWidget {
       {Key key,
       @required this.navigatorKey,
       @required this.initialPage,
-      this.registerRoutes})
+      this.registerRoutes,
+      this.transitionType})
       : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget initialPage;
   final List<RoutePage> registerRoutes;
+  final PageTransitionType transitionType;
 
   static UtilNavigatorState of(BuildContext context) {
     return context.findAncestorStateOfType<UtilNavigatorState>();
@@ -26,7 +29,7 @@ class UtilNavigator extends StatefulWidget {
 }
 
 class UtilNavigatorState extends State<UtilNavigator> {
-  final List<Page> _routeStack = [];
+  final List<RoutePage> _routeStack = [];
 
   List<RoutePage> _registerRoutes = [];
 
@@ -43,22 +46,31 @@ class UtilNavigatorState extends State<UtilNavigator> {
     super.initState();
     assert(widget.initialPage != null);
     UtilRoute.navigatorKey = widget.navigatorKey;
-    _routeStack.add(MaterialPage(
+    _routeStack.add(RoutePage(
       name: '/',
       child: widget.initialPage,
     ));
-    initNameRoutes(widget.registerRoutes);
+    initNameRoutes(routes: widget.registerRoutes);
   }
 
-  void initNameRoutes(List<Page> routes) {
-    _registerRoutes = routes ?? [];
+  void initNameRoutes({List<RoutePage> routes = const []}) {
+    if (routes.isNotEmpty) {
+      routes.forEach((e) {
+        if (e.transitionType == null) e.transitionType = widget.transitionType;
+      });
+    }
+    _registerRoutes = routes;
   }
 
   void push(Widget component, {bool replace = false, Object params}) {
     print('start push');
     String widgetName = '${component.runtimeType}';
     _arguments[widgetName] = params;
-    MaterialPage nextPage = MaterialPage(name: widgetName, child: component);
+
+    RoutePage nextPage = RoutePage(
+        name: widgetName,
+        child: component,
+        transitionType: widget.transitionType);
     setState(() => _routeStack.add(nextPage));
     if (replace && _routeStack.length > 1) _deleteAncestorRoute();
   }

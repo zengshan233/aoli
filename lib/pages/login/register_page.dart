@@ -20,16 +20,19 @@ class _RegisterPageState extends State<RegisterPage> {
       child: Scaffold(
         body: Container(
           width: 375.w,
-          height: MediaQuery.of(context).size.height,
           color: Color(0xFF1E1E1E),
           child: SingleChildScrollView(
+              child: Container(
+            width: 375.w,
+            height: MediaQuery.of(context).size.height,
+            alignment: Alignment.center,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
                   width: 335.w,
-                  margin: EdgeInsets.fromLTRB(5.w, 100.h, 5.w, 30.h),
+                  margin: EdgeInsets.fromLTRB(5.w, 0, 5.w, 30.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ],
             ),
-          ),
+          )),
         ),
       ),
     );

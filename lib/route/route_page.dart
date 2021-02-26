@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
 class RoutePage<T> extends Page<T> {
-  const RoutePage(
+  RoutePage(
       {@required this.child,
       this.maintainState = true,
       this.fullscreenDialog = false,
       this.name,
+      this.transitionType,
       this.enterBefore})
       : assert(child != null),
         assert(maintainState != null),
@@ -26,33 +28,15 @@ class RoutePage<T> extends Page<T> {
 
   final Future Function() enterBefore;
 
+  PageTransitionType transitionType;
+
   @override
   Route<T> createRoute(BuildContext context) {
-    return _PageBasedRoutePageRoute<T>(page: this);
+    return transitionType == null
+        ? MaterialPageRoute(
+            settings: this,
+            builder: (BuildContext context) => child,
+          )
+        : PageTransition(settings: this, type: transitionType, child: child);
   }
-}
-
-class _PageBasedRoutePageRoute<T> extends PageRoute<T>
-    with MaterialRouteTransitionMixin<T> {
-  _PageBasedRoutePageRoute({
-    @required RoutePage<T> page,
-  })  : assert(page != null),
-        assert(opaque),
-        super(settings: page);
-
-  RoutePage<T> get _page => settings as RoutePage<T>;
-
-  @override
-  Widget buildContent(BuildContext context) {
-    return _page.child;
-  }
-
-  @override
-  bool get maintainState => _page.maintainState;
-
-  @override
-  bool get fullscreenDialog => _page.fullscreenDialog;
-
-  @override
-  String get debugLabel => '${super.debugLabel}(${_page.name})';
 }

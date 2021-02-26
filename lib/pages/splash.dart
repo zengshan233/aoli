@@ -1,4 +1,3 @@
-import 'package:animated_text/animated_text.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:aoli/component/image.dart';
 import 'package:aoli/route/util_route.dart';
