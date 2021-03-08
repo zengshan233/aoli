@@ -1,9 +1,12 @@
 import 'package:aoli/component/image.dart';
 import 'package:aoli/component/login_input.dart';
+import 'package:aoli/pages/main_page.dart';
 import 'package:aoli/route/util_route.dart';
+import 'package:aoli/stores/login_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -11,6 +14,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final LoginStore loginStore = LoginStore();
+  final RoundedLoadingButtonController _btnController =
+      new RoundedLoadingButtonController();
+
   @override
   Widget build(BuildContext context) {
     return KeyboardDismisser(
@@ -79,19 +86,18 @@ class _LoginPageState extends State<LoginPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 LoginInput(
-                                  headText: '账号',
-                                  hintText: "请输入邮箱号",
-                                  inputType: TextInputType.emailAddress,
-                                  // onChanged: (v) {
-                                  //   print(v);
-                                  // },
-                                ),
+                                    headText: '账号',
+                                    hintText: "请输入邮箱号",
+                                    inputType: TextInputType.emailAddress,
+                                    onChanged: (v) {
+                                      loginStore.email = v;
+                                    }),
                                 LoginInput(
                                   headText: '密码',
                                   hintText: "请输入密码",
                                   obscureText: true,
                                   onChanged: (v) {
-                                    print(v);
+                                    loginStore.password = v;
                                   },
                                 ),
                                 Container(
@@ -137,15 +143,29 @@ class _LoginPageState extends State<LoginPage> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              InkWell(
-                                onTap: () {
-                                  UtilRoute.pushNamed('main');
-                                },
+                              RoundedLoadingButton(
+                                width: 62.w,
+                                height: 62.w,
+                                // borderRadius: 31.w,
                                 child: Img(
                                     url: 'asset/images/icon_login.png',
                                     width: 62.w,
                                     height: 62.w),
-                              ),
+                                controller: _btnController,
+                                onPressed: () {
+                                  loginStore.login(success: () async {
+                                    _btnController.success();
+                                    await Future.delayed(
+                                        Duration(milliseconds: 1500));
+                                    UtilRoute.pushNamed('main', replace: true);
+                                  }, failed: () async {
+                                    _btnController.error();
+                                    await Future.delayed(
+                                        Duration(milliseconds: 1500));
+                                    _btnController.reset();
+                                  });
+                                },
+                              )
                             ],
                           ),
                         )

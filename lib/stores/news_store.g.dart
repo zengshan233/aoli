@@ -24,10 +24,34 @@ mixin _$NewsStore on _NewsStore, Store {
     });
   }
 
+  final _$newsDataAtom = Atom(name: '_NewsStore.newsData');
+
+  @override
+  List<NewsModel> get newsData {
+    _$newsDataAtom.reportRead();
+    return super.newsData;
+  }
+
+  @override
+  set newsData(List<NewsModel> value) {
+    _$newsDataAtom.reportWrite(value, super.newsData, () {
+      super.newsData = value;
+    });
+  }
+
+  final _$getNewsDataAsyncAction = AsyncAction('_NewsStore.getNewsData');
+
+  @override
+  Future<dynamic> getNewsData({bool refresh = false}) {
+    return _$getNewsDataAsyncAction
+        .run(() => super.getNewsData(refresh: refresh));
+  }
+
   @override
   String toString() {
     return '''
-loading: ${loading}
+loading: ${loading},
+newsData: ${newsData}
     ''';
   }
 }

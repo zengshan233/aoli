@@ -1,8 +1,10 @@
 import 'package:aoli/component/login_input.dart';
 import 'package:aoli/route/util_route.dart';
+import 'package:aoli/stores/register_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:keyboard_dismisser/keyboard_dismisser.dart';
+import 'package:rounded_loading_button/rounded_loading_button.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -10,6 +12,10 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final RegisterStore registerStore = RegisterStore();
+  final RoundedLoadingButtonController _btnController =
+      new RoundedLoadingButtonController();
+
   @override
   Widget build(BuildContext context) {
     return KeyboardDismisser(
@@ -82,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 headText: '姓名',
                                 hintText: "请输入姓名",
                                 onChanged: (v) {
-                                  print(v);
+                                  registerStore.name = v;
                                 },
                               ),
                               LoginInput(
@@ -90,7 +96,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 hintText: "请输入邮箱号",
                                 inputType: TextInputType.emailAddress,
                                 onChanged: (v) {
-                                  print(v);
+                                  registerStore.email = v;
                                 },
                               ),
                               LoginInput(
@@ -98,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 hintText: "请输入密码",
                                 obscureText: true,
                                 onChanged: (v) {
-                                  print(v);
+                                  registerStore.password = v;
                                 },
                               ),
                             ],
@@ -111,27 +117,31 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            InkWell(
-                              onTap: () {
-                                print('?');
-                              },
-                              child: Container(
-                                width: 260.w,
-                                height: 44.w,
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  color: Color(0xFF0377D1),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(22.w),
-                                  ),
-                                ),
-                                child: Text(
-                                  '注册',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16.sp),
-                                ),
+                            RoundedLoadingButton(
+                              width: 260.w,
+                              height: 44.w,
+                              // borderRadius: 22.w,
+                              child: Text(
+                                '注册',
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16.sp),
                               ),
-                            ),
+                              controller: _btnController,
+                              onPressed: () {
+                                 
+                                registerStore.register(success: () async {
+                                  _btnController.success();
+                                  await Future.delayed(
+                                      Duration(milliseconds: 1500));
+                                  UtilRoute.pushNamed('main', replace: true);
+                                }, failed: () async {
+                                  _btnController.error();
+                                  await Future.delayed(
+                                      Duration(milliseconds: 1500));
+                                  _btnController.reset();
+                                });
+                              },
+                            )
                           ],
                         ),
                       )

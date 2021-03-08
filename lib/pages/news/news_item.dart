@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:aoli/component/image.dart';
 import 'package:aoli/events/eventBus.dart';
+import 'package:aoli/model/news_model.dart';
 import 'package:aoli/utils/date_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,11 +11,11 @@ import 'package:sticky_headers/sticky_headers/widget.dart';
 import 'news_content.dart';
 
 class NewsItem extends StatefulWidget {
-  final String date;
+  final NewsModel newsData;
   final Function onFoldTap;
   final bool isLast;
   final bool isFirst;
-  NewsItem({this.date, this.onFoldTap, this.isLast,this.isFirst});
+  NewsItem({this.newsData, this.onFoldTap, this.isLast, this.isFirst});
   @override
   _NewsItemState createState() => _NewsItemState();
 }
@@ -27,8 +28,8 @@ class _NewsItemState extends State<NewsItem> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    if(widget.isFirst){
-         showMore = true;
+    if (widget.isFirst) {
+      showMore = true;
     }
   }
 
@@ -48,7 +49,6 @@ class _NewsItemState extends State<NewsItem> {
                   onTap: () {
                     setState(() => showMore = !showMore);
                     if (showMore) {
-                    
                     } else {
                       if (widget.isLast) {
                         EventBus.instance.commit(EventKeys.AddBottomPadding);
@@ -71,9 +71,10 @@ class _NewsItemState extends State<NewsItem> {
                                   width: 18.h,
                                   height: 18.h),
                               Container(
-                                margin: EdgeInsets.only(left: 6.w, right: 14.w),
+                                width: 130.w,
+                                margin: EdgeInsets.only(left: 6.w, right: 5.w),
                                 child: Text(
-                                  widget.date,
+                                  widget.newsData.date,
                                   style: TextStyle(
                                       color: Color(0xFFEEEEEE),
                                       fontSize: 18.sp,
@@ -89,12 +90,12 @@ class _NewsItemState extends State<NewsItem> {
                             ],
                           ),
                         ),
-                        widget.date != null
+                        widget.newsData.date != null
                             ? Container(
                                 margin: EdgeInsets.only(right: 12.w),
                                 child: Text(
-                                    DateUtil.getZHWeekDay(DateUtil.getDateTime(
-                                        widget.date)),
+                                    DateUtil.getZHWeekDay(
+                                        DateUtil.getDateTime(widget.newsData.date)),
                                     style: TextStyle(
                                         color: Color(0xFFEEEEEE),
                                         fontSize: 13.sp)),
@@ -112,8 +113,9 @@ class _NewsItemState extends State<NewsItem> {
             showMore
                 ? Column(
                     children: List.generate(
-                       7,
+                        widget.newsData.news.length,
                         (index) => NewsContent(
+                          newsInfo:  widget.newsData.news[index],
                               isLastItem: widget.isLast,
                               isLastContent: index == 14,
                             )))
@@ -130,7 +132,6 @@ class _NewsItemState extends State<NewsItem> {
                             height: 23.h,
                             color: Color(0xFFDBDBDE),
                           ),
-                         
                         ]))
           ],
         ));

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:page_transition/page_transition.dart';
 
 import 'pages/splash.dart';
 import 'route/routes.dart';
@@ -65,7 +64,6 @@ class _AoliAppState extends State<AoliApp> {
                   navigatorKey: _navigatorKey,
                   initialPage: Splash(),
                   registerRoutes: routeConfig,
-                  transitionType: PageTransitionType.rightToLeftWithFade,
                 )));
   }
 }

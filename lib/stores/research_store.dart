@@ -1,21 +1,49 @@
+import 'package:aoli/model/research_model.dart';
+import 'package:aoli/services/news_service.dart';
 import 'package:mobx/mobx.dart';
 
 part 'research_store.g.dart';
 
 /// 消息@ store
-class RearchStore extends _RearchStore with _$RearchStore {
-  static RearchStore _instance;
-  factory RearchStore() => _instance ??= RearchStore._();
-  RearchStore._() : super();
+class ResarchStore extends _ResarchStore with _$ResarchStore {
+  static ResarchStore _instance;
+  factory ResarchStore() => _instance ??= ResarchStore._();
+  ResarchStore._() : super();
 }
 
-abstract class _RearchStore with Store {
+abstract class _ResarchStore with Store {
   String keyWords;
 
-  // @observaba
-  // ResearchType researchType;
+  @observable
+  ResearchType researchType = ResearchType.comment;
 
-  // @action
+  @observable
+  List<NewsData> researchData;
 
+  @observable
+  bool loading;
 
+  @action
+  Future getResearchData({bool refresh = false}) async {
+    if (!refresh) {
+      loading = true;
+    }
+
+    NewsResponse data;
+    try {
+      data = await NewsService(type: NewsType.news).send();
+    } catch (e) {
+      print('getNewsData error $e');
+      loading = false;
+      return;
+    }
+    researchData = data.list;
+    loading = false;
+  }
+
+  @action
+  void changeTap(ResearchType type) {
+    researchType = type;
+    getResearchData();
+  }
 }

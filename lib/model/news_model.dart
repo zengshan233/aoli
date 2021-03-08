@@ -1,12 +1,13 @@
+
+
 class NewsModel {
-  final String title;
-  final List<NewsData> news;
-  NewsModel({this.title, this.news});
+  final String date;
+  final List<NewsInfo> news;
+  NewsModel({this.date, this.news});
 }
 
-class NewsData {
+class NewsInfo {
   final String title;
-  final String description;
-  final String date;
-  NewsData({this.title, this.description, this.date});
+  final String content;
+  NewsInfo({this.title, this.content});
 }

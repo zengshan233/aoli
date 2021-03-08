@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 
 import 'route_page.dart';
 import 'util_route.dart';
 
-const transitionDuration = Duration(milliseconds: 400);
+const transitionDuration = Duration(milliseconds: 500);
 
 class UtilNavigator extends StatefulWidget {
   const UtilNavigator(
       {Key key,
       @required this.navigatorKey,
       @required this.initialPage,
-      this.registerRoutes,
-      this.transitionType})
+      this.registerRoutes})
       : super(key: key);
 
   final GlobalKey<NavigatorState> navigatorKey;
   final Widget initialPage;
   final List<RoutePage> registerRoutes;
-  final PageTransitionType transitionType;
 
   static UtilNavigatorState of(BuildContext context) {
     return context.findAncestorStateOfType<UtilNavigatorState>();
@@ -39,7 +36,12 @@ class UtilNavigatorState extends State<UtilNavigator> {
 
   Map<String, Object> _arguments = {};
 
-  Object get arguments => _arguments[_routeStack.last.name];
+  Object get arguments {
+    print("_routeStack $_routeStack");
+    print("_arguments $_arguments");
+    print("name ${_routeStack.last.name}");
+    print("a ${ _arguments[_routeStack.last.name]}");
+    return _arguments[_routeStack.last.name];}
 
   @override
   void initState() {
@@ -54,23 +56,16 @@ class UtilNavigatorState extends State<UtilNavigator> {
   }
 
   void initNameRoutes({List<RoutePage> routes = const []}) {
-    if (routes.isNotEmpty) {
-      routes.forEach((e) {
-        if (e.transitionType == null) e.transitionType = widget.transitionType;
-      });
-    }
     _registerRoutes = routes;
   }
 
   void push(Widget component, {bool replace = false, Object params}) {
-    print('start push');
     String widgetName = '${component.runtimeType}';
     _arguments[widgetName] = params;
 
     RoutePage nextPage = RoutePage(
         name: widgetName,
-        child: component,
-        transitionType: widget.transitionType);
+        child: component,);
     setState(() => _routeStack.add(nextPage));
     if (replace && _routeStack.length > 1) _deleteAncestorRoute();
   }
@@ -80,6 +75,7 @@ class UtilNavigatorState extends State<UtilNavigator> {
     int registeredIdx = registerNames.indexOf(path);
     if (registeredIdx > -1) {
       _arguments[path] = params;
+      print('_arguments $_arguments');
       Page pushPage = _registerRoutes[registeredIdx];
       setState(() => _routeStack.add(pushPage));
       if (replace && _routeStack.length > 1) _deleteAncestorRoute();
@@ -91,10 +87,12 @@ class UtilNavigatorState extends State<UtilNavigator> {
   Future _deleteAncestorRoute() async {
     _backForbid = true;
     setState(() => backAnimationOff = true);
+    print("_routeStack 1  $_routeStack");
     await Future.delayed(transitionDuration);
     remove(_routeStack[_routeStack.length - 2]);
     await Future.delayed(Duration(milliseconds: 10));
     _backForbid = false;
+    print("_routeStack 2 $_routeStack");
     setState(() => backAnimationOff = false);
     print('push  down');
   }
@@ -123,7 +121,7 @@ class UtilNavigatorState extends State<UtilNavigator> {
     return true;
   }
 
-  bool remove(Page page) {
+  bool remove(RoutePage page) {
     final index = _routeStack.indexOf(page);
     if (index == -1) {
       return false;

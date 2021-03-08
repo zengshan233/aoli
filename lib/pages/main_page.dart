@@ -30,24 +30,25 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1E1E1E),
-      body: Container(
-        child: Column(
-          children: [
-            Expanded(
-                child: Container(
-              child: IndexedStack(
-                index: _contentIndex,
-                children: [
-                  HomePage(),
-                  NewsPage(),
-                  ResearchPage(),
-                  FundPage(),
-                  UserPage()
-                ],
-              ),
-            )),
-            Container(
+        backgroundColor: Color(0xFF1E1E1E),
+        resizeToAvoidBottomInset: false,
+        body: Stack(children: [
+          Positioned.fill(
+              child: Container(
+            child: IndexedStack(
+              index: _contentIndex,
+              children: [
+                HomePage(),
+                NewsPage(),
+                ResearchPage(),
+                FundPage(),
+                UserPage()
+              ],
+            ),
+          )),
+          Positioned(
+            bottom: 0,
+            child: Container(
               width: 375.w,
               height: 50.h,
               padding: EdgeInsets.only(top: 5.h),
@@ -86,11 +87,9 @@ class _MainPageState extends State<MainPage> {
                       )),
                 ),
               ),
-            )
-          ],
-        ),
-      ),
-    );
+            ),
+          )
+        ]));
   }
 }
 

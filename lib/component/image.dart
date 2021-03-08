@@ -16,7 +16,7 @@ class Img extends StatefulWidget {
       this.package,
       this.width,
       this.height,
-      this.fit = BoxFit.contain,
+      this.fit = BoxFit.cover,
       this.alignment = Alignment.center});
 
   @override

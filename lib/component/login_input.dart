@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class LoginInput extends StatefulWidget {
   final String headText;
   final String hintText;
-  final ValueChanged Function(String) onChanged;
+  final Function(String) onChanged;
   final TextInputType inputType;
   final bool obscureText;
   LoginInput(
@@ -26,7 +26,7 @@ class LoginInput extends StatefulWidget {
 class LoginInputState extends State<LoginInput> {
   final String headText;
   final String hintText;
-  final ValueChanged Function(String) onChanged;
+  final Function(String) onChanged;
   final TextInputType inputType;
   final bool obscureText;
   LoginInputState(
@@ -54,7 +54,7 @@ class LoginInputState extends State<LoginInput> {
             child: TextField(
               obscureText: obscureText,
               style: TextStyle(color: Color(0xFFEEEEEE)),
-              // onChanged: (value) => onChanged(value),
+              onChanged: (value) => onChanged(value),
               keyboardType: inputType ?? TextInputType.text,
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.fromLTRB(2.w, 0, 0, 0),

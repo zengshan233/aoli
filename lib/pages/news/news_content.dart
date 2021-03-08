@@ -1,11 +1,13 @@
 import 'package:aoli/component/image.dart';
+import 'package:aoli/model/news_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewsContent extends StatefulWidget {
+  final NewsInfo newsInfo;
   final bool isLastItem;
   final bool isLastContent;
-  NewsContent({this.isLastItem, this.isLastContent});
+  NewsContent({this.newsInfo, this.isLastItem, this.isLastContent});
 
   @override
   _NewsContentState createState() => _NewsContentState();
@@ -113,7 +115,11 @@ class _NewsContentState extends State<NewsContent>
                             child: Row(
                               children: [
                                 Container(
-                                    child: Text('利润还可以再翻一番哦！',
+                                  margin: EdgeInsets.only(right:5.w),
+                                    constraints:
+                                        BoxConstraints(maxWidth: 290.w),
+                                    child: Text(widget.newsInfo.title,
+                                        overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                             color: Color(0xFFEEEEEE),
                                             fontSize: 15.sp))),
@@ -130,9 +136,7 @@ class _NewsContentState extends State<NewsContent>
                       showDetail
                           ? Container(
                               width: 315.w,
-                              child: Text(
-                                  '利润已经3倍了，投资5000赚了15,000。想想革命 前辈，为了我们今天牺牲了。心里就很难受。利润 已经3倍了，投资500赚了15,000。想想革命前辈， 为了我们今天牺牲了。心里就很难受。利润已经3 倍了，投资5000赚了15,000。',
-                                  maxLines: 5,
+                              child: Text(widget.newsInfo.content,
                                   style: TextStyle(
                                       color: Color(0xFFCACACA),
                                       fontSize: 14.sp,

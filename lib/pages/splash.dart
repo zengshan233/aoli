@@ -53,7 +53,7 @@ class _SplashState extends State<Splash> {
               alignment: Alignment.topRight,
               child: InkWell(
                 onTap: () {
-                  UtilRoute.pushNamed('login');
+                  UtilRoute.pushNamed('login', replace: true);
                 },
                 child: Img(
                     url: 'asset/images/icon_enter.png',
